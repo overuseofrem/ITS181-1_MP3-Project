@@ -12,6 +12,7 @@ import model.PlaylistGroupEntity;
 import model.SongEntity;
 
 import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.swing.BoxLayout;
 import javax.swing.JComboBox;
@@ -31,6 +32,7 @@ import java.awt.Font;
 import javax.swing.DefaultComboBoxModel;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -287,7 +289,7 @@ public class MusicPlayer extends JFrame {
 //		            {
 //		                clip.stop();
 //		            }
-//		            File file = new File("src/main/java/resources/StringTheocracy.wav");
+//		            File file = new File(baseSongsPath + songData.getTitle() + ".jpg");
 //		            try {
 //		                AudioInputStream audioStream = AudioSystem.getAudioInputStream(file);
 //		                clip = AudioSystem.getClip();
