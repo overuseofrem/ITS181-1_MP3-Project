@@ -10,7 +10,7 @@ public class CreateSong {
 //    private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("songentity");
 //    private static EntityManager em = emf.createEntityManager();
 	private static String basePath;
-	private static String baseSongsResourcesPath = "\\src\\"; //Default
+	private static String baseSongsResourcesPath = "/src/"; //Default
 //    private static SongEntity[] sd = new SongEntity[11]; //Default, NO. of Mili songs in the Project Moon Franchise
 	
 //	private static void CreateSD(int i, String title, String artist, int sPLGID)
@@ -37,7 +37,8 @@ public class CreateSong {
     {
         basePath = System.getProperty("user.dir");
         String baseAndResourcePath = basePath + baseSongsResourcesPath;
-        System.out.println(baseAndResourcePath);
+        String newbaseAndResourcePath = baseAndResourcePath.replace("\\", "/");
+        System.out.println(newbaseAndResourcePath);
         String songPath;
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("songentity");
         EntityManager em = emf.createEntityManager();
@@ -61,7 +62,7 @@ public class CreateSong {
         sd2.setId(i);
         sd2.setTitle("String Theocracy");
         sd2.setArtist("Project Mili");
-        songPath = baseAndResourcePath;
+        songPath = newbaseAndResourcePath;
         sd2.setPath(songPath);
         sd2.setSongPlaylistGroupID(2);
         em.persist(sd2);
@@ -70,7 +71,7 @@ public class CreateSong {
         sd3.setId(i);
         sd3.setTitle("From a Place of Love");
         sd3.setArtist("Project Mili");
-        songPath = baseAndResourcePath;
+        songPath = newbaseAndResourcePath;
         sd3.setPath(songPath);
         sd3.setSongPlaylistGroupID(2);
         em.persist(sd3);

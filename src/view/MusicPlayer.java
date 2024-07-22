@@ -72,6 +72,7 @@ public class MusicPlayer extends JFrame {
 	private String combinedSongStringsPath;
     
     private static String basePath;
+    private String newbasePath;
     private List<SongEntity> songDatas;
     private List<PlaylistGroupEntity> playlistGroupEntities;
     
@@ -224,6 +225,7 @@ public class MusicPlayer extends JFrame {
 		picPanel.add(songPic);
 		
 		basePath = System.getProperty("user.dir") + "/src";
+		newbasePath = basePath.replace("\\", "/");
 	    songDatas = songFunctions.getAllSongData();
 	    playlistGroupEntities = playlistGroupFunctions.getAllPlaylistGroup();
 		
@@ -297,9 +299,9 @@ public class MusicPlayer extends JFrame {
 //		            } catch(Exception e) {
 //		                e.printStackTrace();
 //		            }
-		        	combinedLyricStringsPath = basePath + baseLyricsPath + songData.getTitle() + ".txt";
-		        	combinedImageStringsPath = basePath + baseImagesPath + songData.getTitle() + ".jpg";
-		        	combinedSongStringsPath = basePath + baseSongsPath + songData.getTitle() + ".wav";
+		        	combinedLyricStringsPath = newbasePath + baseLyricsPath + songData.getTitle() + ".txt";
+		        	combinedImageStringsPath = newbasePath + baseImagesPath + songData.getTitle() + ".jpg";
+		        	combinedSongStringsPath = newbasePath + baseSongsPath + songData.getTitle() + ".wav";
 //		        	try {
 //		        	    BufferedReader reader = new BufferedReader(new FileReader(filePath));
 //		        	    String line;
@@ -309,12 +311,11 @@ public class MusicPlayer extends JFrame {
 //		        	    }
 //		        	    reader.close();
 //		        	    textArea.setText(content.toString());
-//		        	} catch (IOException ex) {
-//		        	    JOptionPane.showMessageDialog(this, "Error reading file: " + ex.getMessage(),
-//		        	            "Error", JOptionPane.ERROR_MESSAGE);
-//		        	}
-//		        	songPic.setIcon(new ImageIcon(MusicPlayer.class.getResource(baseImagesPath + songData.getTitle() + ".jpg")));
-//		        	break;
+//			        } catch(Exception e) {
+//		                e.printStackTrace();
+//		            }
+		        	songPic.setIcon(new ImageIcon(MusicPlayer.class.getResource(baseImagesPath + songData.getTitle() + ".jpg")));
+		        	break;
 		        }
 		        else
 		        {
