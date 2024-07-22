@@ -30,6 +30,7 @@ import java.awt.TextField;
 import java.awt.Font;
 import javax.swing.DefaultComboBoxModel;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -54,9 +55,9 @@ public class MusicPlayer extends JFrame {
     @SuppressWarnings("rawtypes")
 	private JComboBox songCB;
     
-	private static String baseSongsPath = "zSongs\\";
-	private static String baseLyricsPath = "zLyrics\\";
-	private static String baseImagesPath = "zImages\\";
+	private static String baseSongsPath = "/zImages/";
+	private static String baseLyricsPath = "/zImages/";
+	private static String baseImagesPath = "/zImages/";
     
 	private int currentPlaylistGroupID = 1;
 	private int currentSongID = 1;
@@ -64,9 +65,9 @@ public class MusicPlayer extends JFrame {
     private String currentArtist;
     private int counterForRefresh = 0;
     
-	private String combinedLyricValues;
-	private String combinedImageValues;
-	private String combinedSongValues;
+	private String combinedLyricStringsPath;
+	private String combinedImageStringsPath;
+	private String combinedSongStringsPath;
     
     private static String basePath;
     
@@ -144,9 +145,9 @@ public class MusicPlayer extends JFrame {
 					System.out.println(currentSongID);
 					System.out.println(currentArtist);
 					checkCurrentSongValues();
-					System.out.println(combinedLyricValues);
-					System.out.println(combinedImageValues);
-					System.out.println(combinedSongValues);
+					System.out.println(combinedLyricStringsPath);
+					System.out.println(combinedImageStringsPath);
+					System.out.println(combinedSongStringsPath);
 				}
 				else
 				{
@@ -218,7 +219,7 @@ public class MusicPlayer extends JFrame {
 		songPic.setIcon(new javax.swing.ImageIcon(getClass().getResource("/zImages/ProjectMili.png")));
 		picPanel.add(songPic);
 		
-		basePath = System.getProperty("user.dir") + "\\src\\";
+		basePath = System.getProperty("user.dir") + "/src/";
 		
 		refreshPLGCB();
 		refreshSDCB();
@@ -262,17 +263,17 @@ public class MusicPlayer extends JFrame {
 	    }
 	}
 	
-	public void checkCurrentSongValues()
+	private void checkCurrentSongValues()
 	{
-        if (currentPlaylistGroupID == 1) {
+        if (currentPlaylistGroupID == 1 || currentSongID == 1) {
             if (clip != null && clip.isRunning())
             {
                 clip.stop();
             }
             artistTF.setText("");
             lyricsTA.setText("");
+            songPic.setIcon(new javax.swing.ImageIcon(getClass().getResource("/zImages/ProjectMili.png")));
             return;
-//            songPic.setIcon(new javax.swing.ImageIcon(getClass().getResource(basePath + "\\src\\" + baseImagesPath + "\\ProjectMili.png")));
         }
         if(currentPlaylistGroupID != 1 && currentSongID != 1)
         {
@@ -293,9 +294,11 @@ public class MusicPlayer extends JFrame {
 //		            } catch(Exception e) {
 //		                e.printStackTrace();
 //		            }
-		        	combinedLyricValues = basePath + baseLyricsPath + songData.getTitle() + ".txt";
-		        	combinedImageValues = basePath + baseImagesPath + songData.getTitle() + ".jpg";
-		        	combinedSongValues = basePath + baseSongsPath + songData.getTitle() + ".wav";
+		        	combinedLyricStringsPath = basePath + baseLyricsPath + songData.getTitle() + ".txt";
+		        	combinedImageStringsPath = basePath + baseImagesPath + songData.getTitle() + ".jpg";
+		        	combinedSongStringsPath = basePath + baseSongsPath + songData.getTitle() + ".wav";
+
+		        	songPic.setIcon(new ImageIcon(MusicPlayer.class.getResource(baseSongsPath + songData.getTitle() + ".jpg")));
 //		        	try {
 //		        		FileReader textReader = new FileReader(combinedLyricValues);
 //		        	}
