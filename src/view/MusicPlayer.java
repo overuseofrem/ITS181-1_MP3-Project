@@ -70,6 +70,8 @@ public class MusicPlayer extends JFrame {
 	private String combinedSongStringsPath;
     
     private static String basePath;
+    private List<SongEntity> songDatas;
+    private List<PlaylistGroupEntity> playlistGroupEntities;
     
     private Clip clip;
     
@@ -220,6 +222,8 @@ public class MusicPlayer extends JFrame {
 		picPanel.add(songPic);
 		
 		basePath = System.getProperty("user.dir") + "/src/";
+	    songDatas = songFunctions.getAllSongData();
+	    playlistGroupEntities = playlistGroupFunctions.getAllPlaylistGroup();
 		
 		refreshPLGCB();
 		refreshSDCB();
@@ -229,7 +233,6 @@ public class MusicPlayer extends JFrame {
 	{
 		String selectedPlaylist = playlistCB.getSelectedItem().toString();
 		int plgID = 1;
-        List<PlaylistGroupEntity> playlistGroupEntities = playlistGroupFunctions.getAllPlaylistGroup();
         for (PlaylistGroupEntity playlistGroupEntity : playlistGroupEntities) {
         	String fcplgTitle = playlistGroupEntity.getPlaylistTitle();
         	if(fcplgTitle != selectedPlaylist)
@@ -246,7 +249,6 @@ public class MusicPlayer extends JFrame {
 	private void checkSongDetails()
 	{
 		String selectedSong = songCB.getSelectedItem().toString();
-	    List<SongEntity> songDatas = songFunctions.getAllSongData();
 	    for (SongEntity songData : songDatas) {
 	    	String songTitle = songData.getTitle();
 	    	if(songTitle == selectedSong)
@@ -278,7 +280,6 @@ public class MusicPlayer extends JFrame {
         if(currentPlaylistGroupID != 1 && currentSongID != 1)
         {
         	String selectedSong = songCB.getSelectedItem().toString();
-	        List<SongEntity> songDatas = songFunctions.getAllSongData();
 	        for (SongEntity songData : songDatas) {
 		        if (selectedSong == songData.getTitle())
 		        {
@@ -321,7 +322,6 @@ public class MusicPlayer extends JFrame {
 	@SuppressWarnings("unchecked")
     private void refreshPLGCB() {
     	playlistCB.removeAllItems();
-        List<PlaylistGroupEntity> playlistGroupEntities = playlistGroupFunctions.getAllPlaylistGroup();
         for (PlaylistGroupEntity playlistGroupEntity : playlistGroupEntities) {
         	playlistCB.addItem(playlistGroupEntity.getPlaylistTitle());
         	
@@ -331,7 +331,6 @@ public class MusicPlayer extends JFrame {
     @SuppressWarnings("unchecked")
 	private void refreshSDCB() {
     	songCB.removeAllItems();
-        List<SongEntity> songDatas = songFunctions.getAllSongData();
         for (SongEntity songData : songDatas) {
         	if(songData.getSongPlaylistGroupID() == 1)
         	{
