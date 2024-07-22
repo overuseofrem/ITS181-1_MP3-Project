@@ -19,6 +19,7 @@ public class CreatePlaylist {
 //        PlaylistGroupEntity[] pl = new PlaylistGroupEntity[3];
         PlaylistGroupEntity plg1 = new PlaylistGroupEntity();
         PlaylistGroupEntity plg2 = new PlaylistGroupEntity();
+        PlaylistGroupEntity plg3 = new PlaylistGroupEntity();
         
         plg1.setplaylistGroupID(i);
         plg1.setPlaylistTitle("Select a Playlist...");
@@ -29,14 +30,12 @@ public class CreatePlaylist {
         plg2.setPlaylistTitle("Library of Ruina");
         em.persist(plg2);
         
-//        i++;
-//        pl[i] = new PlaylistGroupEntity();
-//        pl[i].setplaylistGroupID(i);
-//        pl[i].setPlaylistName("Limbus Company");
+        i++;
+        plg3.setplaylistGroupID(i);
+        plg3.setPlaylistTitle("Limbus Company");
+        em.persist(plg3);
         
         em.getTransaction().commit();
-        System.out.println(plg1.getPlaylistTitle());
-        System.out.println(plg2.getPlaylistTitle());
         em.close();
         emf.close();
     }

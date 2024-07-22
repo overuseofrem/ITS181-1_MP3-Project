@@ -1,16 +1,14 @@
 package view;
 
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
 import control.SongFunctions;
 import control.PlaylistFunctions;
 import model.PlaylistGroupEntity;
 import model.SongEntity;
-
+import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -23,22 +21,18 @@ import java.awt.Insets;
 import javax.swing.JLabel;
 import java.awt.Toolkit;
 import java.util.List;
-import java.util.Objects;
-
 import javax.swing.ImageIcon;
 import java.awt.Component;
 import java.awt.TextField;
 import java.awt.Font;
-import javax.swing.DefaultComboBoxModel;
-import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.awt.event.ActionEvent;
 import java.awt.event.ItemListener;
+import java.awt.image.BufferedImage;
 import java.awt.event.ItemEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class MusicPlayer extends JFrame {
 
@@ -50,29 +44,24 @@ public class MusicPlayer extends JFrame {
 	private JComboBox playlistCB;
     private TextField artistTF;
     private JLabel backLabel;
-    private JLabel playLabel;
+    private JLabel labelPlayORPause;
     private JLabel nextLabel;
     private TextArea lyricsTA;
     private JLabel songPic;
     @SuppressWarnings("rawtypes")
 	private JComboBox songCB;
     
-	private static String baseSongsPath = "/zSongs/";
-	private static String baseLyricsPath = "/zLyrics/";
-	private static String baseImagesPath = "/zImages/";
-    
 	private int currentPlaylistGroupID = 1;
 	private int currentSongID = 1;
-    private String currentSong;
     private String currentArtist;
     private int counterForRefresh = 0;
     
-	private String combinedLyricStringsPath;
-	private String combinedImageStringsPath;
-	private String combinedSongStringsPath;
+	private String currentLyricPath;
+	private String currentImagePath;
+	private String currentSongPath;
+	
+	private Boolean isPlaying = false;
     
-    private static String basePath;
-    private String newbasePath;
     private List<SongEntity> songDatas;
     private List<PlaylistGroupEntity> playlistGroupEntities;
     
@@ -133,7 +122,6 @@ public class MusicPlayer extends JFrame {
 				currentPlaylistGroupID = checkcurrentPlaylistID();
 				counterForRefresh++;
 				refreshSDCB();
-				System.out.println(currentPlaylistGroupID);
 			}
 		});
 		playlistCB.setFont(new java.awt.Font("Baker Signet Std", 1, 12));
@@ -145,14 +133,11 @@ public class MusicPlayer extends JFrame {
 			public void itemStateChanged(ItemEvent e) {
 				if(currentPlaylistGroupID != 1 && counterForRefresh == 2)
 				{
+					labelPlayORPause.setIcon(new ImageIcon(MusicPlayer.class.getResource("/zImages/controls/play.png")));
+					isPlaying = false;
+					songPlayORPause();
 					checkSongDetails();
-					System.out.println(currentSong);
-					System.out.println(currentSongID);
-					System.out.println(currentArtist);
 					checkCurrentSongValues();
-					System.out.println(combinedLyricStringsPath);
-					System.out.println(combinedImageStringsPath);
-					System.out.println(combinedSongStringsPath);
 				}
 				else
 				{
@@ -184,10 +169,17 @@ public class MusicPlayer extends JFrame {
 		emptyLabel1.setIcon(new ImageIcon(MusicPlayer.class.getResource("/zImages/controls/empty.png")));
 		controlsPanel.add(emptyLabel1);
 		
-		playLabel = new JLabel();
-		playLabel.setIcon(new ImageIcon(MusicPlayer.class.getResource("/zImages/controls/play.png")));
-		playLabel.setAlignmentX(0.5f);
-		controlsPanel.add(playLabel);
+		labelPlayORPause = new JLabel();
+		labelPlayORPause.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				songPlayORPause();
+			}
+		});
+		
+		labelPlayORPause.setIcon(new ImageIcon(MusicPlayer.class.getResource("/zImages/controls/play.png")));
+		labelPlayORPause.setAlignmentX(0.5f);
+		controlsPanel.add(labelPlayORPause);
 		
 		JLabel emptyLabel2 = new JLabel();
 		emptyLabel2.setIcon(new ImageIcon(MusicPlayer.class.getResource("/zImages/controls/empty.png")));
@@ -224,13 +216,36 @@ public class MusicPlayer extends JFrame {
 		songPic.setIcon(new javax.swing.ImageIcon(getClass().getResource("/zImages/ProjectMili.png")));
 		picPanel.add(songPic);
 		
-		basePath = System.getProperty("user.dir") + "/src";
-		newbasePath = basePath.replace("\\", "/");
 	    songDatas = songFunctions.getAllSongData();
 	    playlistGroupEntities = playlistGroupFunctions.getAllPlaylistGroup();
-		
+	    
+	    artistTF.setText("All Project Moon X Mili Songs");
+	    
 		refreshPLGCB();
 		refreshSDCB();
+	}
+	
+	private void songPlayORPause()
+	{
+		if(clip != null)
+		{
+			if(!isPlaying)
+			{
+				labelPlayORPause.setIcon(new ImageIcon(MusicPlayer.class.getResource("/zImages/controls/pause.png")));
+				isPlaying = true;
+				clip.start();
+			}
+			else
+			{
+				labelPlayORPause.setIcon(new ImageIcon(MusicPlayer.class.getResource("/zImages/controls/play.png")));
+				isPlaying = false;
+				clip.stop();
+			}
+		}
+		else
+		{
+			return;
+		}
 	}
 	
 	private int checkcurrentPlaylistID()
@@ -257,9 +272,11 @@ public class MusicPlayer extends JFrame {
 	    	String songTitle = songData.getTitle();
 	    	if(songTitle == selectedSong)
 	    	{
-	    		currentSong = songData.getTitle();
 	    		currentSongID = songData.getId();
 	    		currentArtist = songData.getArtist();
+	    		currentSongPath = songData.getSongPath();
+	    		currentLyricPath = songData.getLyricPath();
+	    		currentImagePath = songData.getImagePath();
 	    		break;
 	    	}
 	    	else
@@ -271,11 +288,8 @@ public class MusicPlayer extends JFrame {
 	
 	private void checkCurrentSongValues()
 	{
+		songPlayORPause();
         if (currentPlaylistGroupID == 1 || currentSongID == 1) {
-            if (clip != null && clip.isRunning())
-            {
-                clip.stop();
-            }
             artistTF.setText("");
             lyricsTA.setText("");
             songPic.setIcon(new javax.swing.ImageIcon(getClass().getResource("/zImages/ProjectMili.png")));
@@ -287,34 +301,41 @@ public class MusicPlayer extends JFrame {
 	        for (SongEntity songData : songDatas) {
 		        if (selectedSong == songData.getTitle())
 		        {
-//		            if (clip != null && clip.isRunning())
-//		            {
-//		                clip.stop();
-//		            }
-//		            File file = new File(baseSongsPath + songData.getTitle() + ".wav");
-//		            try {
-//		                AudioInputStream audioStream = AudioSystem.getAudioInputStream(file);
-//		                clip = AudioSystem.getClip();
-//		        	clip.open(audioStream);
-//		            } catch(Exception e) {
-//		                e.printStackTrace();
-//		            }
-		        	combinedLyricStringsPath = newbasePath + baseLyricsPath + songData.getTitle() + ".txt";
-		        	combinedImageStringsPath = newbasePath + baseImagesPath + songData.getTitle() + ".jpg";
-		        	combinedSongStringsPath = newbasePath + baseSongsPath + songData.getTitle() + ".wav";
-//		        	try {
-//		        	    BufferedReader reader = new BufferedReader(new FileReader(filePath));
-//		        	    String line;
-//		        	    StringBuilder content = new StringBuilder();
-//		        	    while ((line = reader.readLine()) != null) {
-//		        	        content.append(line).append("\n");
-//		        	    }
-//		        	    reader.close();
-//		        	    textArea.setText(content.toString());
-//			        } catch(Exception e) {
-//		                e.printStackTrace();
-//		            }
-		        	songPic.setIcon(new ImageIcon(MusicPlayer.class.getResource(baseImagesPath + songData.getTitle() + ".jpg")));
+		        	artistTF.setText(currentArtist);
+		            try {
+		                BufferedImage img = ImageIO.read(new File(currentImagePath));
+		                if (img == null) {
+		                    throw new Exception("Unable to read image file");
+		                }
+		                ImageIcon icon = new ImageIcon(img);
+		                songPic.setIcon(icon);
+		            } catch (Exception e) {
+		            	e.printStackTrace();
+		            }
+		            if (clip != null && clip.isRunning())
+		            {
+		                clip.stop();
+		            }
+		            File file = new File(currentSongPath);
+		            try {
+		                AudioInputStream audioStream = AudioSystem.getAudioInputStream(file);
+		                clip = AudioSystem.getClip();
+		                clip.open(audioStream);
+		            } catch(Exception e) {
+		                e.printStackTrace();
+		            }
+		        	try {
+		        	    BufferedReader reader = new BufferedReader(new FileReader(currentLyricPath));
+		        	    String line;
+		        	    StringBuilder content = new StringBuilder();
+		        	    while ((line = reader.readLine()) != null) {
+		        	        content.append(line).append("\n");
+		        	    }
+		        	    reader.close();
+		        	    lyricsTA.setText(content.toString());
+			        } catch(Exception e) {
+		                e.printStackTrace();
+		            }
 		        	break;
 		        }
 		        else
@@ -343,10 +364,8 @@ public class MusicPlayer extends JFrame {
                 songCB.addItem(songData.getTitle());
                 continue;
         	}
-        	if(songData.getSongPlaylistGroupID() != currentPlaylistGroupID && !(songData.getSongPlaylistGroupID() == 1))
+        	if(songData.getSongPlaylistGroupID() != currentPlaylistGroupID)
         	{
-        		String path = songData.getPath();
-        		System.out.println(path);
         		continue;
         	}
         	else

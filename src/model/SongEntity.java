@@ -11,7 +11,9 @@ public class SongEntity {
     private int id;
     private String title;
     private String artist;
-    private String path;
+    private String songPath;
+    private String lyricPath;
+    private String imagePath;
     private int songPlaylistGroupID;
     
     public SongEntity(){
@@ -41,12 +43,28 @@ public class SongEntity {
         this.artist = artist;
     }
 
-    public String getPath() {
-        return path;
+    public String getSongPath() {
+        return songPath;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setSongPath(String path) {
+        this.songPath = path;
+    }
+    
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String path) {
+        this.imagePath = path;
+    }
+    
+    public String getLyricPath() {
+        return lyricPath;
+    }
+
+    public void setLyricPath(String path) {
+        this.lyricPath = path;
     }
     
     public int getSongPlaylistGroupID() {
