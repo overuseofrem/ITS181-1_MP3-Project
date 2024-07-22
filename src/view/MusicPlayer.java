@@ -300,21 +300,21 @@ public class MusicPlayer extends JFrame {
 		        	combinedLyricStringsPath = basePath + baseLyricsPath + songData.getTitle() + ".txt";
 		        	combinedImageStringsPath = basePath + baseImagesPath + songData.getTitle() + ".jpg";
 		        	combinedSongStringsPath = basePath + baseSongsPath + songData.getTitle() + ".wav";
-		        	try {
-		        	    BufferedReader reader = new BufferedReader(new FileReader(filePath));
-		        	    String line;
-		        	    StringBuilder content = new StringBuilder();
-		        	    while ((line = reader.readLine()) != null) {
-		        	        content.append(line).append("\n");
-		        	    }
-		        	    reader.close();
-		        	    textArea.setText(content.toString());
-		        	} catch (IOException ex) {
-		        	    JOptionPane.showMessageDialog(this, "Error reading file: " + ex.getMessage(),
-		        	            "Error", JOptionPane.ERROR_MESSAGE);
-		        	}
-		        	songPic.setIcon(new ImageIcon(MusicPlayer.class.getResource(baseImagesPath + songData.getTitle() + ".jpg")));
-		        	break;
+//		        	try {
+//		        	    BufferedReader reader = new BufferedReader(new FileReader(filePath));
+//		        	    String line;
+//		        	    StringBuilder content = new StringBuilder();
+//		        	    while ((line = reader.readLine()) != null) {
+//		        	        content.append(line).append("\n");
+//		        	    }
+//		        	    reader.close();
+//		        	    textArea.setText(content.toString());
+//		        	} catch (IOException ex) {
+//		        	    JOptionPane.showMessageDialog(this, "Error reading file: " + ex.getMessage(),
+//		        	            "Error", JOptionPane.ERROR_MESSAGE);
+//		        	}
+//		        	songPic.setIcon(new ImageIcon(MusicPlayer.class.getResource(baseImagesPath + songData.getTitle() + ".jpg")));
+//		        	break;
 		        }
 		        else
 		        {
