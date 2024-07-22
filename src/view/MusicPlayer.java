@@ -55,8 +55,8 @@ public class MusicPlayer extends JFrame {
     @SuppressWarnings("rawtypes")
 	private JComboBox songCB;
     
-	private static String baseSongsPath = "/zImages/";
-	private static String baseLyricsPath = "/zImages/";
+	private static String baseSongsPath = "/zSongs/";
+	private static String baseLyricsPath = "/zLyrics/";
 	private static String baseImagesPath = "/zImages/";
     
 	private int currentPlaylistGroupID = 1;
@@ -221,7 +221,7 @@ public class MusicPlayer extends JFrame {
 		songPic.setIcon(new javax.swing.ImageIcon(getClass().getResource("/zImages/ProjectMili.png")));
 		picPanel.add(songPic);
 		
-		basePath = System.getProperty("user.dir") + "/src/";
+		basePath = System.getProperty("user.dir") + "/src";
 	    songDatas = songFunctions.getAllSongData();
 	    playlistGroupEntities = playlistGroupFunctions.getAllPlaylistGroup();
 		
@@ -298,17 +298,15 @@ public class MusicPlayer extends JFrame {
 		        	combinedLyricStringsPath = basePath + baseLyricsPath + songData.getTitle() + ".txt";
 		        	combinedImageStringsPath = basePath + baseImagesPath + songData.getTitle() + ".jpg";
 		        	combinedSongStringsPath = basePath + baseSongsPath + songData.getTitle() + ".wav";
-
-		        	songPic.setIcon(new ImageIcon(MusicPlayer.class.getResource(baseSongsPath + songData.getTitle() + ".jpg")));
 //		        	try {
-//		        		FileReader textReader = new FileReader(combinedLyricValues);
+//		        		FileReader textReader = new FileReader(baseLyricsPath + songData.getTitle() + ".txt");
+//		        		lyricsTA.read(textReader, baseLyricsPath + songData.getTitle() + ".txt");
 //		        	}
 //		        	catch(Exception e)
 //		        	{
 //		        		e.printStackTrace();
 //		        	}
-//		        	lyricsTA.setForeground(new java.awt.Color(0, 0, 0));
-//		            songPic.setIcon(new javax.swing.ImageIcon(getClass().getResource(combinedImageValues)));
+		        	songPic.setIcon(new ImageIcon(MusicPlayer.class.getResource(baseImagesPath + songData.getTitle() + ".jpg")));
 		        	break;
 		        }
 		        else
