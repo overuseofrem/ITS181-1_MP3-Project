@@ -10,7 +10,7 @@ public class CreateSong {
 //    private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("songentity");
 //    private static EntityManager em = emf.createEntityManager();
 	private static String basePath;
-	private static String baseSongsResourcesPath = "\\src\\resources\\"; //Default
+	private static String baseSongsResourcesPath = "\\src\\"; //Default
 //    private static SongEntity[] sd = new SongEntity[11]; //Default, NO. of Mili songs in the Project Moon Franchise
 	
 //	private static void CreateSD(int i, String title, String artist, int sPLGID)

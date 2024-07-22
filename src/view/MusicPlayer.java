@@ -49,21 +49,19 @@ public class MusicPlayer extends JFrame {
     private JLabel backLabel;
     private JLabel playLabel;
     private JLabel nextLabel;
-    private JLabel shuffleLabel;
     private TextArea lyricsTA;
     private JLabel songPic;
     @SuppressWarnings("rawtypes")
 	private JComboBox songCB;
     
-	private static String baseSongsPath = "\\zSongs\\";
-	private static String baseLyricsPath = "\\zLyrics\\";
-	private static String baseImagesPath = "\\zImages\\";
+	private static String baseSongsPath = "zSongs\\";
+	private static String baseLyricsPath = "zLyrics\\";
+	private static String baseImagesPath = "zImages\\";
     
 	private int currentPlaylistGroupID = 1;
 	private int currentSongID = 1;
     private String currentSong;
     private String currentArtist;
-    private String currentPath;
     private int counterForRefresh = 0;
     
 	private String combinedLyricValues;
@@ -145,7 +143,10 @@ public class MusicPlayer extends JFrame {
 					System.out.println(currentSong);
 					System.out.println(currentSongID);
 					System.out.println(currentArtist);
-					System.out.println(currentPath);
+					checkCurrentSongValues();
+					System.out.println(combinedLyricValues);
+					System.out.println(combinedImageValues);
+					System.out.println(combinedSongValues);
 				}
 				else
 				{
@@ -190,15 +191,6 @@ public class MusicPlayer extends JFrame {
 		nextLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		nextLabel.setIcon(new ImageIcon(MusicPlayer.class.getResource("/zImages/controls/next.png")));
 		controlsPanel.add(nextLabel);
-
-		JLabel emptyLabel3 = new JLabel();
-		emptyLabel3.setIcon(new ImageIcon(MusicPlayer.class.getResource("/zImages/controls/empty.png")));
-		controlsPanel.add(emptyLabel3);
-		
-		shuffleLabel = new JLabel();
-		shuffleLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-		shuffleLabel.setIcon(new ImageIcon(MusicPlayer.class.getResource("/zImages/controls/shuffle.png")));
-		controlsPanel.add(shuffleLabel);
 		
 		JPanel taPanel = new JPanel();
 		GridBagConstraints gbc_taPanel = new GridBagConstraints();
@@ -226,7 +218,7 @@ public class MusicPlayer extends JFrame {
 		songPic.setIcon(new javax.swing.ImageIcon(getClass().getResource("/zImages/ProjectMili.png")));
 		picPanel.add(songPic);
 		
-		basePath = System.getProperty("user.dir") + "\\src\\resources\\";
+		basePath = System.getProperty("user.dir") + "\\src\\";
 		
 		refreshPLGCB();
 		refreshSDCB();
@@ -261,7 +253,6 @@ public class MusicPlayer extends JFrame {
 	    		currentSong = songData.getTitle();
 	    		currentSongID = songData.getId();
 	    		currentArtist = songData.getArtist();
-	    		currentPath = songData.getPath() + "\\" + currentSong +".wav";
 	    		break;
 	    	}
 	    	else
@@ -271,58 +262,58 @@ public class MusicPlayer extends JFrame {
 	    }
 	}
 	
-//	public void checkCurrentSongValues()
-//	{
-//        if (currentPlaylistGroupID == 1) {
-//            if (clip != null && clip.isRunning())
-//            {
-//                clip.stop();
-//            }
-//            artistTF.setText("");
-//            lyricsTA.setText("");
-//            return;
-////            songPic.setIcon(new javax.swing.ImageIcon(getClass().getResource(basePath + "\\src\\resources\\" + baseImagesPath + "\\ProjectMili.png")));
-//        }
-//        if(currentPlaylistGroupID != 1 && currentSongID != 1)
-//        {
-//        	String selectedSong = songCB.getSelectedItem().toString();
-//	        List<SongEntity> songDatas = songFunctions.getAllSongData();
-//	        for (SongEntity songData : songDatas) {
-//		        if (selectedSong == songData.getTitle())
-//		        {
-////		            if (clip != null && clip.isRunning())
-////		            {
-////		                clip.stop();
-////		            }
-////		            File file = new File("src/main/java/resources/StringTheocracy.wav");
-////		            try {
-////		                AudioInputStream audioStream = AudioSystem.getAudioInputStream(file);
-////		                clip = AudioSystem.getClip();
-////		        	clip.open(audioStream);
-////		            } catch(Exception e) {
-////		                e.printStackTrace();
-////		            }
-//		        	combinedLyricValues = basePath + baseLyricsPath + "\\" + songData.getTitle() + ".txt";
-//		        	combinedImageValues = basePath + baseImagesPath + "\\" + songData.getTitle() + ".jpg";
-//		        	combinedSongValues = basePath + baseSongsPath + "\\" + songData.getTitle() + ".wav";
-////		        	try {
-////		        		FileReader textReader = new FileReader(combinedLyricValues);
-////		        	}
-////		        	catch(Exception e)
-////		        	{
-////		        		e.printStackTrace();
-////		        	}
-////		        	lyricsTA.setForeground(new java.awt.Color(0, 0, 0));
-////		            songPic.setIcon(new javax.swing.ImageIcon(getClass().getResource(combinedImageValues)));
-//		        	break;
-//		        }
-//		        else
-//		        {
-//		        	continue;
-//		        }
-//	        }
-//        }
-//	}
+	public void checkCurrentSongValues()
+	{
+        if (currentPlaylistGroupID == 1) {
+            if (clip != null && clip.isRunning())
+            {
+                clip.stop();
+            }
+            artistTF.setText("");
+            lyricsTA.setText("");
+            return;
+//            songPic.setIcon(new javax.swing.ImageIcon(getClass().getResource(basePath + "\\src\\" + baseImagesPath + "\\ProjectMili.png")));
+        }
+        if(currentPlaylistGroupID != 1 && currentSongID != 1)
+        {
+        	String selectedSong = songCB.getSelectedItem().toString();
+	        List<SongEntity> songDatas = songFunctions.getAllSongData();
+	        for (SongEntity songData : songDatas) {
+		        if (selectedSong == songData.getTitle())
+		        {
+//		            if (clip != null && clip.isRunning())
+//		            {
+//		                clip.stop();
+//		            }
+//		            File file = new File("src/main/java/resources/StringTheocracy.wav");
+//		            try {
+//		                AudioInputStream audioStream = AudioSystem.getAudioInputStream(file);
+//		                clip = AudioSystem.getClip();
+//		        	clip.open(audioStream);
+//		            } catch(Exception e) {
+//		                e.printStackTrace();
+//		            }
+		        	combinedLyricValues = basePath + baseLyricsPath + songData.getTitle() + ".txt";
+		        	combinedImageValues = basePath + baseImagesPath + songData.getTitle() + ".jpg";
+		        	combinedSongValues = basePath + baseSongsPath + songData.getTitle() + ".wav";
+//		        	try {
+//		        		FileReader textReader = new FileReader(combinedLyricValues);
+//		        	}
+//		        	catch(Exception e)
+//		        	{
+//		        		e.printStackTrace();
+//		        	}
+//		        	lyricsTA.setForeground(new java.awt.Color(0, 0, 0));
+//		            songPic.setIcon(new javax.swing.ImageIcon(getClass().getResource(combinedImageValues)));
+		        	break;
+		        }
+		        else
+		        {
+		        	continue;
+		        }
+	        }
+        }
+	}
 	
 	@SuppressWarnings("unchecked")
     private void refreshPLGCB() {
