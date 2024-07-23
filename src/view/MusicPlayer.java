@@ -24,6 +24,7 @@ import java.awt.Toolkit;
 import java.util.List;
 import javax.swing.ImageIcon;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.TextField;
 import java.awt.Font;
 import java.io.BufferedReader;
@@ -163,6 +164,20 @@ public class MusicPlayer extends JFrame {
 		controlsPanel.setLayout(new BoxLayout(controlsPanel, BoxLayout.X_AXIS));
 		
 		backLabel = new JLabel();
+		backLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				backSong();
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				backLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				backLabel.setCursor(Cursor.getDefaultCursor());
+			}
+		});
 		backLabel.setIcon(new ImageIcon(MusicPlayer.class.getResource("/zImages/controls/back.png")));
 		controlsPanel.add(backLabel);
 		
@@ -176,6 +191,14 @@ public class MusicPlayer extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				songPlayORPause();
 			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				labelPlayORPause.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				labelPlayORPause.setCursor(Cursor.getDefaultCursor());
+			}
 		});
 		
 		labelPlayORPause.setIcon(new ImageIcon(MusicPlayer.class.getResource("/zImages/controls/play.png")));
@@ -187,6 +210,20 @@ public class MusicPlayer extends JFrame {
 		controlsPanel.add(emptyLabel2);
 		
 		nextLabel = new JLabel();
+		nextLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				nextSong();
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				nextLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				nextLabel.setCursor(Cursor.getDefaultCursor());
+			}
+		});
 		nextLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		nextLabel.setIcon(new ImageIcon(MusicPlayer.class.getResource("/zImages/controls/next.png")));
 		controlsPanel.add(nextLabel);
@@ -224,6 +261,34 @@ public class MusicPlayer extends JFrame {
 	    
 		refreshPLGCB();
 		refreshSDCB();
+	}
+	
+	private void nextSong()
+	{
+		if (currentPlaylistGroupID == 1)
+			return;
+		if(songCB.getSelectedIndex() < (songCB.getItemCount() - 1))
+		{
+			songCB.setSelectedIndex(songCB.getSelectedIndex() + 1);
+		}
+		else
+		{
+			songCB.setSelectedIndex(1);
+		} 
+	}
+
+	private void backSong()
+	{
+		if (currentPlaylistGroupID == 1)
+			return;
+		if(songCB.getSelectedIndex() > 1)
+		{
+			songCB.setSelectedIndex(songCB.getSelectedIndex() - 1);
+		}
+		else
+		{
+			songCB.setSelectedIndex(songCB.getItemCount() - 1);
+		} 
 	}
 	
 	private void songPlayORPause()
