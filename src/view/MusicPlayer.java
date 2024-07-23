@@ -107,6 +107,7 @@ public class MusicPlayer extends JFrame {
 	 */
 	@SuppressWarnings({ "rawtypes" })
 	public MusicPlayer() {
+		setTitle("Project Moon X Mili Music Collection");
 		songFunctions = new SongFunctions();
 		playlistGroupFunctions = new PlaylistFunctions();
 		
