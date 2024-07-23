@@ -19,6 +19,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import java.awt.Toolkit;
 import java.util.List;
 import javax.swing.ImageIcon;
@@ -290,7 +291,7 @@ public class MusicPlayer extends JFrame {
 	{
 		songPlayORPause();
         if (currentPlaylistGroupID == 1 || currentSongID == 1) {
-            artistTF.setText("");
+            artistTF.setText("All Project Moon X Mili Songs");
             lyricsTA.setText("");
             songPic.setIcon(new javax.swing.ImageIcon(getClass().getResource("/zImages/ProjectMili.png")));
             return;
@@ -303,18 +304,13 @@ public class MusicPlayer extends JFrame {
 		        {
 		        	artistTF.setText(currentArtist);
 		            try {
+		            	// Image
 		                BufferedImage img = ImageIO.read(new File(currentImagePath));
-		                if (img == null) {
-		                    throw new Exception("Unable to read image file");
-		                }
 		                ImageIcon icon = new ImageIcon(img);
 		                songPic.setIcon(icon);
 		            } catch (Exception e) {
 		            	e.printStackTrace();
-		            }
-		            if (clip != null && clip.isRunning())
-		            {
-		                clip.stop();
+		                JOptionPane.showMessageDialog(null,"Unsupported or missing Image file.");
 		            }
 		            File file = new File(currentSongPath);
 		            try {
@@ -323,6 +319,7 @@ public class MusicPlayer extends JFrame {
 		                clip.open(audioStream);
 		            } catch(Exception e) {
 		                e.printStackTrace();
+		                JOptionPane.showMessageDialog(null,"Unsupported or missing Audio file.");
 		            }
 		        	try {
 		        	    BufferedReader reader = new BufferedReader(new FileReader(currentLyricPath));
@@ -335,6 +332,7 @@ public class MusicPlayer extends JFrame {
 		        	    lyricsTA.setText(content.toString());
 			        } catch(Exception e) {
 		                e.printStackTrace();
+		                JOptionPane.showMessageDialog(null,"Unsupported or missing Lyrics file.");
 		            }
 		        	break;
 		        }
