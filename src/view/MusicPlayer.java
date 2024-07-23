@@ -23,6 +23,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import java.awt.Toolkit;
 import java.util.List;
+import java.util.Random;
+
 import javax.swing.ImageIcon;
 import java.awt.Component;
 import java.awt.Cursor;
@@ -68,12 +70,25 @@ public class MusicPlayer extends JFrame {
     private List<SongEntity> songDatas;
     private List<PlaylistGroupEntity> playlistGroupEntities;
     
-    private Clip clip;
+    private Clip clip = null;
     private JPanel panel;
     private JLabel volupLabel;
     private JLabel voldownLabel;
     private JLabel emptyLabel3;
+    private JPanel textColorMode;
+    private JPanel additionalButtons;
+    private JLabel shuffleLabel;
+    private JLabel emptyLabel4;
+    private JLabel autoplayLabel;
     
+    private Boolean autoplay = false;
+    private Boolean shuffle = false;
+    private Boolean nextSongRepeat = false;
+    
+    private int previousSong = 1;
+    private int currentSong = 1;
+    private int prevprevSong = 1;
+
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -99,16 +114,16 @@ public class MusicPlayer extends JFrame {
 		setResizable(false);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(MusicPlayer.class.getResource("/zImages/ProjectMili.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 980, 600);
+		setBounds(100, 100, 980, 680);
 		splJPanel = new JPanel();
 		splJPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(splJPanel);
 		GridBagLayout gbl_splJPanel = new GridBagLayout();
 		gbl_splJPanel.columnWidths = new int[]{160, 460, 0};
-		gbl_splJPanel.rowHeights = new int[] {40, 0, 0};
-		gbl_splJPanel.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
-		gbl_splJPanel.rowWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
+		gbl_splJPanel.rowHeights = new int[] {40, 0, 0, 0};
+		gbl_splJPanel.columnWeights = new double[]{1.0, 1.0, Double.MIN_VALUE};
+		gbl_splJPanel.rowWeights = new double[]{0.0, 1.0, 0.0, Double.MIN_VALUE};
 		splJPanel.setLayout(gbl_splJPanel);
 		
 		JPanel cbPanel = new JPanel();
@@ -125,6 +140,9 @@ public class MusicPlayer extends JFrame {
 		playlistCB = new JComboBox();
 		playlistCB.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
+			    previousSong = 1;
+			    currentSong = 1;
+			    prevprevSong = 1;
 				counterForRefresh = 0;
 				currentPlaylistGroupID = checkcurrentPlaylistID();
 				counterForRefresh++;
@@ -138,11 +156,8 @@ public class MusicPlayer extends JFrame {
 		songCB = new JComboBox();
 		songCB.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
-				if(currentPlaylistGroupID != 1 && counterForRefresh == 2)
+				if(currentPlaylistGroupID != 1 && counterForRefresh >= 2)
 				{
-					labelPlayORPause.setIcon(new ImageIcon(MusicPlayer.class.getResource("/zImages/controls/play.png")));
-					isPlaying = false;
-					songPlayORPause();
 					checkSongDetails();
 					checkCurrentSongValues();
 				}
@@ -279,7 +294,7 @@ public class MusicPlayer extends JFrame {
 		
 		JPanel taPanel = new JPanel();
 		GridBagConstraints gbc_taPanel = new GridBagConstraints();
-		gbc_taPanel.insets = new Insets(0, 0, 0, 5);
+		gbc_taPanel.insets = new Insets(0, 0, 5, 5);
 		gbc_taPanel.fill = GridBagConstraints.VERTICAL;
 		gbc_taPanel.gridx = 0;
 		gbc_taPanel.gridy = 1;
@@ -293,6 +308,7 @@ public class MusicPlayer extends JFrame {
 		
 		JPanel picPanel = new JPanel();
 		GridBagConstraints gbc_picPanel = new GridBagConstraints();
+		gbc_picPanel.insets = new Insets(0, 0, 5, 0);
 		gbc_picPanel.fill = GridBagConstraints.BOTH;
 		gbc_picPanel.gridx = 1;
 		gbc_picPanel.gridy = 1;
@@ -308,8 +324,91 @@ public class MusicPlayer extends JFrame {
 	    
 	    artistTF.setText("All Project Moon X Mili Songs");
 	    
+	    textColorMode = new JPanel();
+	    GridBagConstraints gbc_textColorMode = new GridBagConstraints();
+	    gbc_textColorMode.insets = new Insets(0, 0, 0, 5);
+	    gbc_textColorMode.gridx = 0;
+	    gbc_textColorMode.gridy = 2;
+	    splJPanel.add(textColorMode, gbc_textColorMode);
+	    textColorMode.setLayout(new BoxLayout(textColorMode, BoxLayout.X_AXIS));
+	    
+	    additionalButtons = new JPanel();
+	    GridBagConstraints gbc_additionalButtons = new GridBagConstraints();
+	    gbc_additionalButtons.gridx = 1;
+	    gbc_additionalButtons.gridy = 2;
+	    splJPanel.add(additionalButtons, gbc_additionalButtons);
+	    additionalButtons.setLayout(new BoxLayout(additionalButtons, BoxLayout.X_AXIS));
+	    
+	    shuffleLabel = new JLabel();
+	    shuffleLabel.addMouseListener(new MouseAdapter() {
+	    	@Override
+	    	public void mouseClicked(MouseEvent e) {
+	    		shuffleFunction();
+	    	}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				shuffleLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				shuffleLabel.setCursor(Cursor.getDefaultCursor());
+			}
+	    });
+	    shuffleLabel.setIcon(new ImageIcon(MusicPlayer.class.getResource("/zImages/controls/shuffle.png")));
+	    additionalButtons.add(shuffleLabel);
+	    
+	    emptyLabel4 = new JLabel();
+	    emptyLabel4.setIcon(new ImageIcon(MusicPlayer.class.getResource("/zImages/controls/empty.png")));
+	    additionalButtons.add(emptyLabel4);
+	    
+	    autoplayLabel = new JLabel();
+	    autoplayLabel.addMouseListener(new MouseAdapter() {
+	    	@Override
+	    	public void mouseClicked(MouseEvent e) {
+	    		autoplayFunction();
+	    	}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				autoplayLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				autoplayLabel.setCursor(Cursor.getDefaultCursor());
+			}
+	    });
+	    autoplayLabel.setIcon(new ImageIcon(MusicPlayer.class.getResource("/zImages/controls/autoplay.png")));
+	    additionalButtons.add(autoplayLabel);
+	    
 		refreshPLGCB();
 		refreshSDCB();
+	}
+	
+	private void autoplayFunction()
+	{
+		if(autoplay == false)
+		{
+			autoplay = true;
+			autoplayLabel.setIcon(new ImageIcon(MusicPlayer.class.getResource("/zImages/controls/autoplayON.png")));
+		}
+		else
+		{
+			autoplay = false;
+			autoplayLabel.setIcon(new ImageIcon(MusicPlayer.class.getResource("/zImages/controls/autoplay.png")));
+		}
+	}
+	
+	private void shuffleFunction()
+	{
+		if(shuffle == false)
+		{
+			shuffle = true;
+			shuffleLabel.setIcon(new ImageIcon(MusicPlayer.class.getResource("/zImages/controls/shuffleON.png")));
+		}
+		else
+		{
+			shuffle = false;
+			shuffleLabel.setIcon(new ImageIcon(MusicPlayer.class.getResource("/zImages/controls/shuffle.png")));
+		}
 	}
 	
 	private void volumeUpOrDown(Boolean increased)
@@ -330,30 +429,66 @@ public class MusicPlayer extends JFrame {
 	
 	private void nextSong()
 	{
+		if(!nextSongRepeat)
+		{
+			previousSong = currentSong;
+		}
+		if(previousSong != 1)
+			prevprevSong = previousSong;
 		if (currentPlaylistGroupID == 1)
 			return;
-		if(songCB.getSelectedIndex() < (songCB.getItemCount() - 1))
+		else if(shuffle)
+		{
+			Random rand = new Random();
+			songCB.setSelectedIndex(rand.nextInt(songCB.getItemCount() - 1) + 1);
+		}
+		else if(songCB.getSelectedIndex() < (songCB.getItemCount() - 1))
 		{
 			songCB.setSelectedIndex(songCB.getSelectedIndex() + 1);
 		}
 		else
 		{
 			songCB.setSelectedIndex(1);
-		} 
+		}
+		currentSong = songCB.getSelectedIndex();
+		if(shuffle && (currentSong == previousSong || currentSong == prevprevSong))
+		{
+			nextSongRepeat = true;
+			nextSong();
+		}
+		nextSongRepeat = false;
 	}
 
 	private void backSong()
 	{
+		if(!nextSongRepeat)
+		{
+			previousSong = currentSong;
+		}
+		if(previousSong != 1)
+			prevprevSong = previousSong;
 		if (currentPlaylistGroupID == 1)
 			return;
-		if(songCB.getSelectedIndex() > 1)
+		else if(shuffle)
+		{
+			Random rand = new Random();
+			songCB.setSelectedIndex(rand.nextInt(songCB.getItemCount() - 1) + 1);
+		}
+		else if(songCB.getSelectedIndex() > 1)
 		{
 			songCB.setSelectedIndex(songCB.getSelectedIndex() - 1);
 		}
 		else
 		{
 			songCB.setSelectedIndex(songCB.getItemCount() - 1);
-		} 
+		}
+		currentSong = songCB.getSelectedIndex();
+		if(shuffle && (currentSong == previousSong || currentSong == prevprevSong))
+		{
+			nextSongRepeat = true;
+			backSong();
+		}
+		nextSongRepeat = false;
 	}
 	
 	private void songPlayORPause()
@@ -419,7 +554,11 @@ public class MusicPlayer extends JFrame {
 	
 	private void checkCurrentSongValues()
 	{
-		songPlayORPause();
+		if(clip != null)
+		{
+			isPlaying = false;
+			clip.stop();
+		}
         if (currentPlaylistGroupID == 1 || currentSongID == 1) {
             artistTF.setText("All Project Moon X Mili Songs");
             lyricsTA.setText("");
@@ -444,6 +583,7 @@ public class MusicPlayer extends JFrame {
 		            }
 		            File file = new File(currentSongPath);
 		            try {
+		            	clip = null;
 		                AudioInputStream audioStream = AudioSystem.getAudioInputStream(file);
 		                clip = AudioSystem.getClip();
 		                clip.open(audioStream);
@@ -464,6 +604,8 @@ public class MusicPlayer extends JFrame {
 		                e.printStackTrace();
 		                JOptionPane.showMessageDialog(null,"Unsupported or missing Lyrics file.");
 		            }
+		    		if(autoplay)
+		    			songPlayORPause();
 		        	break;
 		        }
 		        else
