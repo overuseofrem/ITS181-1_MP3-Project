@@ -12,6 +12,7 @@ import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
 import javax.swing.BoxLayout;
 import javax.swing.JComboBox;
 import java.awt.TextArea;
@@ -68,6 +69,10 @@ public class MusicPlayer extends JFrame {
     private List<PlaylistGroupEntity> playlistGroupEntities;
     
     private Clip clip;
+    private JPanel panel;
+    private JLabel volupLabel;
+    private JLabel voldownLabel;
+    private JLabel emptyLabel3;
     
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -228,6 +233,50 @@ public class MusicPlayer extends JFrame {
 		nextLabel.setIcon(new ImageIcon(MusicPlayer.class.getResource("/zImages/controls/next.png")));
 		controlsPanel.add(nextLabel);
 		
+		emptyLabel3 = new JLabel();
+		emptyLabel3.setIcon(new ImageIcon(MusicPlayer.class.getResource("/zImages/controls/empty.png")));
+		controlsPanel.add(emptyLabel3);
+		
+		panel = new JPanel();
+		controlsPanel.add(panel);
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		
+		volupLabel = new JLabel();
+		volupLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				volumeUpOrDown(true);
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				volupLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				volupLabel.setCursor(Cursor.getDefaultCursor());
+			}
+		});
+		volupLabel.setIcon(new ImageIcon(MusicPlayer.class.getResource("/zImages/controls/volup.png")));
+		panel.add(volupLabel);
+		
+		voldownLabel = new JLabel();
+		voldownLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				volumeUpOrDown(false);
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				voldownLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				voldownLabel.setCursor(Cursor.getDefaultCursor());
+			}
+		});
+		voldownLabel.setIcon(new ImageIcon(MusicPlayer.class.getResource("/zImages/controls/voldown.png")));
+		panel.add(voldownLabel);
+		
 		JPanel taPanel = new JPanel();
 		GridBagConstraints gbc_taPanel = new GridBagConstraints();
 		gbc_taPanel.insets = new Insets(0, 0, 0, 5);
@@ -261,6 +310,22 @@ public class MusicPlayer extends JFrame {
 	    
 		refreshPLGCB();
 		refreshSDCB();
+	}
+	
+	private void volumeUpOrDown(Boolean increased)
+	{
+		if(clip != null && increased)
+		{
+			FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+			gainControl.setValue(gainControl.getValue()+1.0f);
+		}
+		else if(clip != null && !increased)
+		{
+			FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+			gainControl.setValue(gainControl.getValue()-1.0f);
+		}
+		else
+			return;
 	}
 	
 	private void nextSong()
