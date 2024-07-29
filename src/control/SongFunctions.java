@@ -31,14 +31,6 @@ public class SongFunctions {
         enma.getTransaction().commit();
         enma.close();
     }
-
-    public void updateSongData(SongEntity sd) {
-        EntityManager enma = enmafa.createEntityManager();
-        enma.getTransaction().begin();
-        enma.merge(sd);
-        enma.getTransaction().commit();
-        enma.close();
-    }
     
     public List<SongEntity> getAllSongData() {
         EntityManager enma = enmafa.createEntityManager();

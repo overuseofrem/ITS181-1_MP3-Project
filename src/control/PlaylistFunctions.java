@@ -31,14 +31,6 @@ public class PlaylistFunctions {
         enma.getTransaction().commit();
         enma.close();
     }
-
-    public void updatePlaylistGroup(PlaylistGroupEntity plg) {
-        EntityManager enma = enmafa.createEntityManager();
-        enma.getTransaction().begin();
-        enma.merge(plg);
-        enma.getTransaction().commit();
-        enma.close();
-    }
     
     public List<PlaylistGroupEntity> getAllPlaylistGroup() {
         EntityManager enma = enmafa.createEntityManager();
