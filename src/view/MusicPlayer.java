@@ -91,6 +91,8 @@ public class MusicPlayer extends JFrame {
     private int previousSong = 1;
     private int currentSong = 1;
     private int prevprevSong = 1;
+    private float previousVolume;
+    private Boolean firstTimeVolume = true;
     
 	BufferedImage emptyImage, playImage, backImage, nextImage, volupImage, voldownImage, autoplayImage, autoplayONImage, shuffleImage, shuffleONImage, ProjectMiliImage, pauseImage;
 	ImageIcon emptyIcon, playIcon, backIcon, nextIcon, volupIcon, voldownIcon, autoplayIcon, autoplayONIcon, shuffleIcon, shuffleONIcon, ProjectMiliIcon, pauseIcon;
@@ -470,11 +472,14 @@ public class MusicPlayer extends JFrame {
 		{
 			FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
 			gainControl.setValue(gainControl.getValue()+1.0f);
+			previousVolume = gainControl.getValue();
+			
 		}
 		else if(clip != null && !increased)
 		{
 			FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
 			gainControl.setValue(gainControl.getValue()-1.0f);
+			previousVolume = gainControl.getValue();
 		}
 		else
 			return;
@@ -546,6 +551,8 @@ public class MusicPlayer extends JFrame {
 	
 	private void songPlayORPause()
 	{
+		FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+		gainControl.setValue(previousVolume);
 		if(clip != null)
 		{
 			if(!isPlaying)
@@ -657,6 +664,12 @@ public class MusicPlayer extends JFrame {
 		                e.printStackTrace();
 		                JOptionPane.showMessageDialog(null,"Unsupported or missing Lyrics file.");
 		            }
+		        	if(firstTimeVolume)
+		        	{
+		        		FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+		        		previousVolume = gainControl.getValue();
+		        		firstTimeVolume = false;
+		        	}
 		    		if(autoplay)
 		    			songPlayORPause();
 		        	break;
