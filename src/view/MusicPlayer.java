@@ -41,6 +41,9 @@ import java.awt.event.MouseEvent;
 
 public class MusicPlayer extends JFrame {
 
+	private static String basePath;
+	private static String baseSongsResourcesPath = "/src/"; //Default
+	
     private SongFunctions songFunctions;
     private PlaylistFunctions playlistGroupFunctions;
 	private static final long serialVersionUID = 1L;
@@ -88,6 +91,9 @@ public class MusicPlayer extends JFrame {
     private int previousSong = 1;
     private int currentSong = 1;
     private int prevprevSong = 1;
+    
+	BufferedImage emptyImage, playImage, backImage, nextImage, volupImage, voldownImage, autoplayImage, autoplayONImage, shuffleImage, shuffleONImage, ProjectMiliImage, pauseImage;
+	ImageIcon emptyIcon, playIcon, backIcon, nextIcon, volupIcon, voldownIcon, autoplayIcon, autoplayONIcon, shuffleIcon, shuffleONIcon, ProjectMiliIcon, pauseIcon;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -107,6 +113,52 @@ public class MusicPlayer extends JFrame {
 	 */
 	@SuppressWarnings({ "rawtypes" })
 	public MusicPlayer() {
+		
+		basePath = System.getProperty("user.dir");
+        String baseAndResourcePath = basePath + baseSongsResourcesPath;
+        String newbaseAndResourcePath = baseAndResourcePath.replace("\\", "/");
+        
+        try
+		{
+			emptyImage = ImageIO.read(new File(newbaseAndResourcePath + "zImages/controls/empty.png"));
+        	emptyIcon = new ImageIcon(emptyImage);
+        	
+        	playImage = ImageIO.read(new File(newbaseAndResourcePath + "zImages/controls/play.png"));
+        	playIcon = new ImageIcon(playImage);
+        	
+        	BufferedImage backImage = ImageIO.read(new File(newbaseAndResourcePath + "zImages/controls/back.png"));
+        	backIcon = new ImageIcon(backImage);
+        	
+        	nextImage = ImageIO.read(new File(newbaseAndResourcePath + "zImages/controls/next.png"));
+        	nextIcon = new ImageIcon(nextImage);
+        	
+        	volupImage = ImageIO.read(new File(newbaseAndResourcePath + "zImages/controls/volup.png"));
+        	volupIcon = new ImageIcon(volupImage);
+        	
+        	voldownImage = ImageIO.read(new File(newbaseAndResourcePath + "zImages/controls/voldown.png"));
+        	voldownIcon = new ImageIcon(voldownImage);
+        	
+        	autoplayImage = ImageIO.read(new File(newbaseAndResourcePath + "zImages/controls/autoplay.png"));
+        	autoplayIcon = new ImageIcon(autoplayImage);
+        	autoplayONImage = ImageIO.read(new File(newbaseAndResourcePath + "zImages/controls/autoplayON.png"));
+        	autoplayONIcon = new ImageIcon(autoplayONImage);
+        	
+        	shuffleImage = ImageIO.read(new File(newbaseAndResourcePath + "zImages/controls/shuffle.png"));
+        	shuffleIcon = new ImageIcon(shuffleImage);
+        	shuffleONImage = ImageIO.read(new File(newbaseAndResourcePath + "zImages/controls/shuffleON.png"));
+        	shuffleONIcon = new ImageIcon(shuffleONImage);
+        	
+        	ProjectMiliImage = ImageIO.read(new File(newbaseAndResourcePath + "zImages/ProjectMili.png"));
+        	ProjectMiliIcon = new ImageIcon(ProjectMiliImage);
+        	
+        	pauseImage = ImageIO.read(new File(newbaseAndResourcePath + "zImages/controls/pause.png"));
+        	pauseIcon = new ImageIcon(pauseImage);
+        	
+		}
+		catch(Exception e) {
+            e.printStackTrace();
+        }
+		
 		setTitle("Project Moon X Mili Music Collection");
 		songFunctions = new SongFunctions();
 		playlistGroupFunctions = new PlaylistFunctions();
@@ -199,11 +251,11 @@ public class MusicPlayer extends JFrame {
 				backLabel.setCursor(Cursor.getDefaultCursor());
 			}
 		});
-		backLabel.setIcon(new ImageIcon(MusicPlayer.class.getResource("/zImages/controls/back.png")));
+		backLabel.setIcon(backIcon);
 		controlsPanel.add(backLabel);
 		
 		JLabel emptyLabel1 = new JLabel();
-		emptyLabel1.setIcon(new ImageIcon(MusicPlayer.class.getResource("/zImages/controls/empty.png")));
+		emptyLabel1.setIcon(emptyIcon);
 		controlsPanel.add(emptyLabel1);
 		
 		labelPlayORPause = new JLabel();
@@ -222,12 +274,12 @@ public class MusicPlayer extends JFrame {
 			}
 		});
 		
-		labelPlayORPause.setIcon(new ImageIcon(MusicPlayer.class.getResource("/zImages/controls/play.png")));
+		labelPlayORPause.setIcon(playIcon);
 		labelPlayORPause.setAlignmentX(0.5f);
 		controlsPanel.add(labelPlayORPause);
 		
 		JLabel emptyLabel2 = new JLabel();
-		emptyLabel2.setIcon(new ImageIcon(MusicPlayer.class.getResource("/zImages/controls/empty.png")));
+		emptyLabel2.setIcon(emptyIcon);
 		controlsPanel.add(emptyLabel2);
 		
 		nextLabel = new JLabel();
@@ -246,11 +298,11 @@ public class MusicPlayer extends JFrame {
 			}
 		});
 		nextLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-		nextLabel.setIcon(new ImageIcon(MusicPlayer.class.getResource("/zImages/controls/next.png")));
+		nextLabel.setIcon(nextIcon);
 		controlsPanel.add(nextLabel);
 		
 		emptyLabel3 = new JLabel();
-		emptyLabel3.setIcon(new ImageIcon(MusicPlayer.class.getResource("/zImages/controls/empty.png")));
+		emptyLabel3.setIcon(emptyIcon);
 		controlsPanel.add(emptyLabel3);
 		
 		panel = new JPanel();
@@ -272,7 +324,7 @@ public class MusicPlayer extends JFrame {
 				volupLabel.setCursor(Cursor.getDefaultCursor());
 			}
 		});
-		volupLabel.setIcon(new ImageIcon(MusicPlayer.class.getResource("/zImages/controls/volup.png")));
+		volupLabel.setIcon(volupIcon);
 		panel.add(volupLabel);
 		
 		voldownLabel = new JLabel();
@@ -290,7 +342,7 @@ public class MusicPlayer extends JFrame {
 				voldownLabel.setCursor(Cursor.getDefaultCursor());
 			}
 		});
-		voldownLabel.setIcon(new ImageIcon(MusicPlayer.class.getResource("/zImages/controls/voldown.png")));
+		voldownLabel.setIcon(voldownIcon);
 		panel.add(voldownLabel);
 		
 		JPanel taPanel = new JPanel();
@@ -317,7 +369,7 @@ public class MusicPlayer extends JFrame {
 		picPanel.setLayout(new BoxLayout(picPanel, BoxLayout.X_AXIS));
 		
 		songPic = new JLabel();
-		songPic.setIcon(new javax.swing.ImageIcon(getClass().getResource("/zImages/ProjectMili.png")));
+		songPic.setIcon(ProjectMiliIcon);
 		picPanel.add(songPic);
 		
 	    songDatas = songFunctions.getAllSongData();
@@ -355,11 +407,11 @@ public class MusicPlayer extends JFrame {
 				shuffleLabel.setCursor(Cursor.getDefaultCursor());
 			}
 	    });
-	    shuffleLabel.setIcon(new ImageIcon(MusicPlayer.class.getResource("/zImages/controls/shuffle.png")));
+	    shuffleLabel.setIcon(shuffleIcon);
 	    additionalButtons.add(shuffleLabel);
 	    
 	    emptyLabel4 = new JLabel();
-	    emptyLabel4.setIcon(new ImageIcon(MusicPlayer.class.getResource("/zImages/controls/empty.png")));
+	    emptyLabel4.setIcon(emptyIcon);
 	    additionalButtons.add(emptyLabel4);
 	    
 	    autoplayLabel = new JLabel();
@@ -377,7 +429,7 @@ public class MusicPlayer extends JFrame {
 				autoplayLabel.setCursor(Cursor.getDefaultCursor());
 			}
 	    });
-	    autoplayLabel.setIcon(new ImageIcon(MusicPlayer.class.getResource("/zImages/controls/autoplay.png")));
+	    autoplayLabel.setIcon(autoplayIcon);
 	    additionalButtons.add(autoplayLabel);
 	    
 		refreshPLGCB();
@@ -389,12 +441,12 @@ public class MusicPlayer extends JFrame {
 		if(autoplay == false)
 		{
 			autoplay = true;
-			autoplayLabel.setIcon(new ImageIcon(MusicPlayer.class.getResource("/zImages/controls/autoplayON.png")));
+			autoplayLabel.setIcon(autoplayONIcon);
 		}
 		else
 		{
 			autoplay = false;
-			autoplayLabel.setIcon(new ImageIcon(MusicPlayer.class.getResource("/zImages/controls/autoplay.png")));
+			autoplayLabel.setIcon(autoplayIcon);
 		}
 	}
 	
@@ -403,12 +455,12 @@ public class MusicPlayer extends JFrame {
 		if(shuffle == false)
 		{
 			shuffle = true;
-			shuffleLabel.setIcon(new ImageIcon(MusicPlayer.class.getResource("/zImages/controls/shuffleON.png")));
+			shuffleLabel.setIcon(shuffleONIcon);
 		}
 		else
 		{
 			shuffle = false;
-			shuffleLabel.setIcon(new ImageIcon(MusicPlayer.class.getResource("/zImages/controls/shuffle.png")));
+			shuffleLabel.setIcon(shuffleIcon);
 		}
 	}
 	
@@ -498,13 +550,13 @@ public class MusicPlayer extends JFrame {
 		{
 			if(!isPlaying)
 			{
-				labelPlayORPause.setIcon(new ImageIcon(MusicPlayer.class.getResource("/zImages/controls/pause.png")));
+				labelPlayORPause.setIcon(pauseIcon);
 				isPlaying = true;
 				clip.start();
 			}
 			else
 			{
-				labelPlayORPause.setIcon(new ImageIcon(MusicPlayer.class.getResource("/zImages/controls/play.png")));
+				labelPlayORPause.setIcon(playIcon);
 				isPlaying = false;
 				clip.stop();
 			}
@@ -563,7 +615,7 @@ public class MusicPlayer extends JFrame {
         if (currentPlaylistGroupID == 1 || currentSongID == 1) {
             artistTF.setText("All Project Moon X Mili Songs");
             lyricsTA.setText("");
-            songPic.setIcon(new javax.swing.ImageIcon(getClass().getResource("/zImages/ProjectMili.png")));
+            songPic.setIcon(ProjectMiliIcon);
             return;
         }
         if(currentPlaylistGroupID != 1 && currentSongID != 1)
